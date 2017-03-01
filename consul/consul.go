@@ -112,8 +112,6 @@ func (r *ConsulAdapter) buildCheck(service *bridge.Service) *consulapi.AgentServ
 		if timeout := service.Attrs["check_timeout"]; timeout != "" {
 			check.Timeout = timeout
 		}
-	} else if deregister_critical_service_after := service.Attrs["deregister_critical_service_after"]; deregister_critical_service_after != "" {
-		check.DeregisterCriticalServiceAfter = deregister_critical_service_after
 	} else {
 		return nil
 	}
@@ -123,6 +121,9 @@ func (r *ConsulAdapter) buildCheck(service *bridge.Service) *consulapi.AgentServ
 		} else {
 			check.Interval = DefaultInterval
 		}
+	}
+	if deregister_after := service.Attrs["check_deregister_after"]; deregister_after != "" {
+		check.DeregisterCriticalServiceAfter = deregister_after
 	}
 	return check
 }
