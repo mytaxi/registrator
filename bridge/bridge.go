@@ -269,6 +269,13 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
 	metadata, metadataFromPort := serviceMetaData(container.Config, port.ExposedPort)
 
 	ignore := mapDefault(metadata, "ignore", "")
+	// Patched in from https://github.com/gliderlabs/registrator/pull/302
+	if b.config.IgnoreDefault == true {
+		if metadata["name"] == "" {
+			return nil
+		}
+	}
+	// Patch End
 	if ignore != "" {
 		return nil
 	}
